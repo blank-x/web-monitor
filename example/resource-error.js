@@ -1,0 +1,3 @@
+setTimeout(()=>{
+  fetch('/sdfsdf/sdfsdf')
+})

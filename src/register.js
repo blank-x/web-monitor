@@ -1,30 +1,28 @@
 // import { UPLOAD_URL, EVENT_PREFIX, MAX_CACHE_UPLOAD_NUMBER } from './constants.js';
 // import { parseParams, getCurrentTime, getCurrentRoute } from './utils';
 // import './ListenHistroy';
-
-export default function(config) {
+import { sendData, getBaseInfo, getErrType } from "./utils";
+export default function register (config) {
   if (!validateParams(config)) {
-    console.error('请配置longan参数');
     return false;
   }
-  if (config.source !== window.location.host) {
-    console.warning('当前环境与配置不符，不上报pv信息');
-    return false;
-  }
+  // if (config.source !== window.location.host) {
+  //   console.warning('当前环境与配置不符，不上报pv信息');
+  //   return false;
+  // }
   // uploadPv(config);
   // 注册监听错误事件
-  listenGlobalError(config);
+  listenGlobalError();
   // 监听全局的点击事件
   // listenTriggerEvent(config);
-
 }
-/* 
 const validateParams = (config) => {
-  const fields = ['project', 'source'];
+  return true;
+  const fields = ["project", "source"];
   const result = fields.find((field) => !config[field]);
   return !result;
-}
-
+};
+/* 
 const uploadPv = (config) => {
   const payload = {
     ...config,
@@ -35,25 +33,19 @@ const uploadPv = (config) => {
   // 监听路由变化和页面加载
   listenHistory(payload);
 }
-
 // 监听history对象变化 + onload事件，发送pv
 const listenHistory = (params) => {
   window.onload = function() {
     params.route = getCurrentRoute();
     params.createTime = getCurrentTime();
-    console.log(params);
     sendRequest(params);
   }
   window.addHistoryListener('history', function() {
     params.route = getCurrentRoute();
     params.createTime = getCurrentTime();
-    console.log(params);
     sendRequest(params);
   });
 }
-
-
-
 // 监听全局事件埋点
 const listenTriggerEvent = (config) => {
   document.addEventListener('click', (e) => {
@@ -70,7 +62,6 @@ const listenTriggerEvent = (config) => {
     }
   });
 }
-
 // 上传埋点信息
 const sendRequest = (params) => {
   params.route = window.location.origin + window.location.pathname;
@@ -82,7 +73,6 @@ const sendRequest = (params) => {
     image.src = UPLOAD_URL + '?' + parseParams(params);
   }
 }
-
 // 记录，批量上传
 const recordCacheLog = (params) => {
   const oldCount = localStorage.getItem('longanCount');
@@ -100,26 +90,39 @@ const recordCacheLog = (params) => {
   }
 }
  */
-
 // 监听全局错误，并上报
 const listenGlobalError = (config) => {
-  const payload = {
-    ...config,
-    type: 'error',
-    client: navigator.userAgent,
-  };
-  window.onerror = (err) => {
-    payload.content = err;
-    sendRequest(payload);
-  }
-}
-
-function sendRequest(){
-
-}
-
+  let baseInfo = getBaseInfo()
+  
+ 
+  window.addEventListener('error',err => {
+    console.log( err);
+    const data = {
+      ...baseInfo,
+      errMessage:err.message,
+      errLineNo:err.lineno,
+      colno:err.colno,
+      filename:err.filename,
+      error:err.error && err.error.stack,
+      getErrType:getErrType(err.message)
+    }
+  
+    sendData(data);
+  },true);
+  window.addEventListener('unhandledrejection',err => {
+    const data = {
+      ...baseInfo,
+      errMessage:err.message,
+      errLineNo:err.lineno,
+      colno:err.colno,
+      filename:err.filename,
+      error:err.error && err.error.stack,
+      getErrType:getErrType(err.message)
+    }
+    sendData(data);
+  });
+};
+ 
 // 语法错误
-
-// 调用api接口报错  
-
+// 调用api接口报错
 // 测试环境不发错误
