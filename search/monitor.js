@@ -6,6 +6,7 @@ window.console.error = function (...args) {
    },1000)
    nativeConsoleError.apply(this, args);
 }
+
 window.addEventListener("error", function (e) {
 
   console.log(e);
