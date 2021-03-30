@@ -1,16 +1,17 @@
 import {errorType} from './constants'
-export function sendData(data){
+export function ajax(params){
  
   var xhr = new XMLHttpRequest()
-  xhr.open('POST', window.ZS_M_CONFIG.logUrl, true);
+  xhr.open(params.method, params.url, true);
   xhr.setRequestHeader('content-type','application/json')
   xhr.onload = function(e) {
     if(this.status == 200||this.status == 304){
-        console.log(this.responseText);
+      params.success && params.success()
+        // console.log(this.responseText);
     }
   };
   
-  xhr.send(JSON.stringify(data));
+  xhr.send(JSON.stringify(params.data));
 }
 
 export function merge (...args){
@@ -27,4 +28,30 @@ export function getBaseInfo(){
 export function getErrType(message=''){
   let type = errorType.find(item=>message.includes(item))
   return type
+}
+
+export function validateConfig(config){
+  return true
+  if (!config.appId) {
+    console.warn('需要appId');
+    return false;
+  }
+  return true
+}
+
+export function getGrammerErr(err){
+
+}
+export function getPromiseErr(err){
+
+}
+export function getResourceErr(err){
+
+}
+
+export function getResourceSrc(err){
+  if(err.target.tagName.toLowerCase() === 'link'){
+    return err.target.link
+  }
+  return err.target.src
 }

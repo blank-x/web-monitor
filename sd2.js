@@ -1,8 +1,3 @@
-if (typeof require === 'function' && typeof exports === "object" && typeof module === "object") {
-  module.exports = Performance
-} else {
-  window.Performance = Performance
-}
 
 window.ERRORLIST = [];
 window.ADDDATA = {};
@@ -519,7 +514,7 @@ function Performance(option, fn) {
       // 拦截js error信息
       function _error() {
           // img,script,css,jsonp
-          window.addEventListener('error', function (e) {
+/*           window.addEventListener('error', function (e) {
               let defaults = Object.assign({}, errordefo);
               defaults.n = 'resource'
               defaults.t = new Date().getTime();
@@ -531,9 +526,9 @@ function Performance(option, fn) {
                   resourceUrl: e.target.href || e.target.currentSrc,
               };
               if (e.target != window) conf.errorList.push(defaults);
-          }, true);
+          }, true); */
           // js
-          window.onerror = function (msg, _url, line, col, error) {
+   /*        window.onerror = function (msg, _url, line, col, error) {
               let defaults = Object.assign({}, errordefo);
               setTimeout(function () {
                   col = col || (window.event && window.event.errorCharacter) || 0;
@@ -549,7 +544,7 @@ function Performance(option, fn) {
                   // 上报错误信息
                   if (conf.page === location.href && !conf.haveAjax) reportData(3);
               }, 0);
-          };
+          }; */
           window.addEventListener('unhandledrejection', function (e) {
               const error = e && e.reason
               const message = error.message || '';

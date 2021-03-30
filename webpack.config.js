@@ -19,6 +19,7 @@ if(process.env.mode === 'local'){
 module.exports = {
   entry: './src/index.js',
   mode: 'none',
+  devtool: 'inline-source-map',
 
   output: {
     filename: 'bundle.js',
