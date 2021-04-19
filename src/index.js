@@ -197,17 +197,33 @@ function uploadPerformance() {
   window.onload = function () {
     const { domainLookupEnd, domainLookupStart, connectEnd, connectStart, secureConnectionStart, responseStart, requestStart, responseEnd, domInteractive, loadEventStart, domContentLoadedEventEnd, fetchStart } = window.performance.timing;
     const performanceParams = {
+      /* 阶段性指标 */
+      // DNS解析耗时
       dns: domainLookupEnd - domainLookupStart,
+      // TCP连接耗时
       tcp: connectEnd - connectStart,
+       // SSL安全连接耗时  
       ssl: connectEnd - secureConnectionStart,
+      //dom渲染完成时间
+      dom: domInteractive - domLoading,
+      // TTFB 是 Time to First Byte 的缩写，网络请求耗时
+      // (后台处理时间+重定向时间)
+      // 对服务器来说，TTFB 时间越短，就说明服务器响应越快。
+      //  50 ms 以下
       ttfb: responseStart - requestStart,
+      // 数据传输耗时  衡量网速和资源大小
       trans: responseEnd - responseStart,
-      dom: domInteractive - responseEnd,
+      // 资源加载耗时, 表示页面中的同步加载资源
       res: loadEventStart - domContentLoadedEventEnd,
+      /* 关键性能指标 */
       firstbyte: responseStart - domainLookupStart,
+      // 首次渲染   从请求开始到浏览器开始解析第一批 HTML 文档字节的时间差
       fpt: responseEnd - fetchStart,
+      // 首次可交互  浏览器完成所有 HTML 解析并且完成 DOM 构建，此时浏览器开始加载资源
       tti: domInteractive - fetchStart,
+      // Ready  如果页面有同步执行的 JS，则同步 JS 执行时间
       ready: domContentLoadedEventEnd - fetchStart,
+      // 页面完全加载  首次渲染时间 + DOM 解析耗时 + 同步 JS 执行 + 资源加载耗时
       load: loadEventStart - fetchStart,
     };
     const baseInfo = getBaseInfo()
