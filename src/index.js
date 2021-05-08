@@ -202,10 +202,10 @@ function uploadPerformance() {
       dns: domainLookupEnd - domainLookupStart,
       // TCP连接耗时
       tcp: connectEnd - connectStart,
-       // SSL安全连接耗时  
+       // SSL安全连接耗时
       ssl: connectEnd - secureConnectionStart,
       //dom渲染完成时间
-      dom: domInteractive - domLoading,
+      dom: domInteractive - responseEnd,
       // TTFB 是 Time to First Byte 的缩写，网络请求耗时
       // (后台处理时间+重定向时间)
       // 对服务器来说，TTFB 时间越短，就说明服务器响应越快。
@@ -217,7 +217,7 @@ function uploadPerformance() {
       res: loadEventStart - domContentLoadedEventEnd,
       /* 关键性能指标 */
       firstbyte: responseStart - domainLookupStart,
-      // 首次渲染   从请求开始到浏览器开始解析第一批 HTML 文档字节的时间差
+      // 首包时间   从请求开始到浏览器开始解析第一批 HTML 文档字节的时间差
       fpt: responseEnd - fetchStart,
       // 首次可交互  浏览器完成所有 HTML 解析并且完成 DOM 构建，此时浏览器开始加载资源
       tti: domInteractive - fetchStart,
@@ -235,3 +235,4 @@ function uploadPerformance() {
 }
 
 export const Version = "0.0.1";
+
